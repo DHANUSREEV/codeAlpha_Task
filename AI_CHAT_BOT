@@ -1,0 +1,104 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ChatbotGUI extends JFrame {
+
+    private JTextArea chatArea;
+    private JTextField inputField;
+    private Map<String, String> responses;
+    private Image background;
+
+    public ChatbotGUI() {
+        setTitle("💗 G I R L I S H   C H A T B O T");
+        setSize(600, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        // Load background image
+        background = new ImageIcon(getClass().getResource("background.jpg")).getImage();
+
+        // Panel with background image
+        JPanel mainPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        mainPanel.setLayout(new BorderLayout(10, 10));
+        setContentPane(mainPanel);
+
+        // Chat display area
+        chatArea = new JTextArea();
+        chatArea.setOpaque(false);
+        chatArea.setForeground(new Color(170, 0, 100));
+        chatArea.setFont(new Font("Dialog", Font.PLAIN, 16)); // Supports emojis/emoticons
+        chatArea.setLineWrap(true);
+        chatArea.setWrapStyleWord(true);
+        chatArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(chatArea);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Input field
+        inputField = new JTextField();
+        inputField.setFont(new Font("Dialog", Font.PLAIN, 16));
+        inputField.setBackground(new Color(255, 220, 235));
+        inputField.setForeground(new Color(90, 0, 70));
+        inputField.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        inputField.addActionListener(e -> {
+            String userInput = inputField.getText().trim();
+            if (!userInput.isEmpty()) {
+                chatArea.append("You: " + userInput + "\n");
+                respond(userInput.toLowerCase());
+                inputField.setText("");
+            }
+        });
+
+        // Predefined cute responses
+        responses = new HashMap<>();
+        responses.put("hello", "Hey lovely! (✿ ♡‿♡) What can I do for you?");
+        responses.put("hi", "Hii cutie! (◍•ᴗ•◍)❤");
+        responses.put("how are you", "I'm feeling fab! ✧(⁠｡⁠•̀⁠ᴗ⁠-⁠)✧");
+        responses.put("cute", "Aww you're the cutest! (⁠つ⁠≧⁠▽⁠≦⁠)⁠つ");
+        responses.put("cry", "Nooo don’t cry… ༎ຶ⁠‿⁠༎ຶ Here, a hug!");
+        responses.put("bye", "Byee byee! (⁠◔⁠‿⁠◔⁠)♡ Come back soon!");
+        responses.put("thank you", "You're welcome, sparkle friend! ✿(◕‿◕✿)");
+        responses.put("your name", "I'm your sparkle chatbot bestie! ◉‿◉");
+        responses.put("help", "Say things like 'hello', 'how are you', 'cute', or 'cry'.");
+
+        // Add components
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(inputField, BorderLayout.SOUTH);
+
+        // Welcome message
+        chatArea.append("Bot: Welcome to the Sparkle Chat! (✿◠‿◠)\n");
+        chatArea.append("Bot: Say things like 'hello', 'how are you', 'cute', or 'cry'.\n\n");
+
+        setVisible(true);
+    }
+
+    private void respond(String input) {
+        boolean found = false;
+        for (Map.Entry<String, String> entry : responses.entrySet()) {
+            if (input.contains(entry.getKey())) {
+                chatArea.append("Bot: " + entry.getValue() + "\n\n");
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            chatArea.append("Bot: Hmm... I'm not sure what that means, cutie (｡ŏ﹏ŏ). Try 'help'.\n\n");
+        }
+        chatArea.setCaretPosition(chatArea.getDocument().getLength());
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ChatbotGUI::new);
+    }
+}
